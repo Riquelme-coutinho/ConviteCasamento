@@ -1,0 +1,137 @@
+/**
+ * app/globals.css
+ *
+ * Design System — Paleta baseada em #b0cddf (azul-aço suave)
+ *
+ * Estratégia de cores:
+ *   Sobrescrevemos as famílias "rose" e "pink" do Tailwind via @theme
+ *   com tons derivados de #b0cddf (HSL 207°, 40%, 78%).
+ *   Assim todos os componentes existentes assumem automaticamente
+ *   as novas cores sem alterar nenhum className.
+ *
+ *   Paleta completa:
+ *     50  → #EEF5FA  (fundo quase branco azulado)
+ *     100 → #D9EAF3  (fundo de sections claras)
+ *     200 → #C0DCEC  (bordas, divisores)
+ *     300 → #B0CDDF  ← COR PRINCIPAL
+ *     400 → #89BAD2  (hover suave, ícones secundários)
+ *     500 → #62A3C3  (botões, texto de destaque)
+ *     600 → #4589AA  (hover de botões)
+ *     700 → #32698A  (texto forte)
+ *     800 → #1E4E6B  (texto muito forte)
+ *     900 → #0F3450  (quase preto azulado)
+ *     950 → #072030  (fundo dark — substitui gray-950)
+ */
+
+@import "tailwindcss";
+
+/* ============================================================
+   TEMA — sobrescreve rose e pink com a paleta #b0cddf
+   ============================================================ */
+@theme {
+  /* Fontes injetadas pelo next/font no layout.tsx */
+  --font-serif: var(--font-serif);
+  --font-sans:  var(--font-sans);
+
+  /* ── Família "rose" → tons de azul #b0cddf ───────────────── */
+  --color-rose-50:  #EEF5FA;
+  --color-rose-100: #D9EAF3;
+  --color-rose-200: #C0DCEC;
+  --color-rose-300: #B0CDDF;
+  --color-rose-400: #89BAD2;
+  --color-rose-500: #62A3C3;
+  --color-rose-600: #4589AA;
+  --color-rose-700: #32698A;
+  --color-rose-800: #1E4E6B;
+  --color-rose-900: #0F3450;
+  --color-rose-950: #072030;
+
+  /* ── Família "pink" → tons de azul ligeiramente mais frios ── */
+  --color-pink-50:  #ECF4FA;
+  --color-pink-100: #D4E8F2;
+  --color-pink-200: #B8D8EC;
+  --color-pink-300: #9DC8E3;
+  --color-pink-400: #7AB5D9;
+  --color-pink-500: #5AA3CC;
+  --color-pink-600: #428FB5;
+  --color-pink-700: #2D729A;
+  --color-pink-800: #1A5680;
+  --color-pink-900: #0C3D66;
+  --color-pink-950: #062348;
+
+  /* ── Família "amber" → dourado/areia quente (contraste com o azul) */
+  --color-amber-50:  #FDF8EE;
+  --color-amber-100: #FAF0D5;
+  --color-amber-200: #F4DFA0;
+  --color-amber-300: #EDCB6A;
+  --color-amber-400: #E4B43A;
+  --color-amber-500: #C89A20;
+  --color-amber-600: #A67C15;
+  --color-amber-700: #85610D;
+  --color-amber-800: #64480A;
+  --color-amber-900: #432F06;
+  --color-amber-950: #221803;
+
+  /* ── "gray-950" → navy profundo (fundo das sections dark) ─── */
+  --color-gray-950: #072030;
+}
+
+/* ============================================================
+   RESET E BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================================
+   SCROLLBAR (WebKit)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #072030;
+}
+::-webkit-scrollbar-thumb {
+  background: #62A3C3;
+  border-radius: 99px;
+}
+
+/* ============================================================
+   SELEÇÃO E FOCO
+   ============================================================ */
+::selection {
+  background-color: #B0CDDF;
+  color: #072030;
+}
+
+:focus-visible {
+  outline: 2px solid #62A3C3;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   ANIMAÇÕES
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.05); }
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 3s ease-in-out infinite;
+}
