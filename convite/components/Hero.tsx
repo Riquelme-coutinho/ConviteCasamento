@@ -9,6 +9,7 @@
  * O countdown é isolado no CountDown.tsx (Client Component).
  */
 import CountDown from "./CountDown";
+import Reveal from "./Reveal";
 import { MapPin, Calendar } from "lucide-react";
 
 // Props da seção Hero — edite os valores em app/page.tsx
@@ -63,22 +64,26 @@ export default function Hero({
       {/* Conteúdo principal — z-index garante posicionamento sobre o overlay */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         {/* Tag decorativa */}
-        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-8">
-          <span className="text-rose-300 text-lg">❤</span>
-          <span className="text-white/80 text-xs font-medium uppercase tracking-[0.2em]">
-            Convite de Casamento
-          </span>
-          <span className="text-rose-300 text-lg">❤</span>
-        </div>
+        <Reveal>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-8">
+            <span className="text-rose-300 text-lg">❤</span>
+            <span className="text-white/80 text-xs font-medium uppercase tracking-[0.2em]">
+              Convite de Casamento
+            </span>
+            <span className="text-rose-300 text-lg">❤</span>
+          </div>
+        </Reveal>
 
         {/* Nomes dos noivos — fonte serif para elegância */}
-        <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-bold text-white leading-tight mb-4 drop-shadow-2xl">
-          {bride}
-          <span className="block text-rose-400 text-3xl sm:text-4xl md:text-5xl font-light italic my-2">
-            &amp;
-          </span>
-          {groom}
-        </h1>
+        <Reveal delay={100}>
+          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-bold text-white leading-tight mb-4 drop-shadow-2xl">
+            {bride}
+            <span className="text-gradient block text-3xl sm:text-4xl md:text-5xl font-light italic my-2">
+              &amp;
+            </span>
+            {groom}
+          </h1>
+        </Reveal>
 
         {/* Divisor decorativo */}
         <div className="flex items-center justify-center gap-4 my-4">
@@ -88,14 +93,16 @@ export default function Hero({
         </div>
 
         {/* Data e local */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-white/90 mb-10">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-rose-300" />
-            <span className="text-sm sm:text-base font-medium">
-              {formattedDate} • {weddingTime}
-            </span>
+        <Reveal delay={200}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-white/90 mb-10">
+            <div className="flex items-center gap-2 max-w-full px-2">
+              <Calendar className="w-4 h-4 shrink-0 text-rose-300" />
+              <span className="text-sm sm:text-base font-medium">
+                {formattedDate} • {weddingTime}
+              </span>
+            </div>
           </div>
-        </div>
+        </Reveal>
 
         <div className="flex items-center justify-center gap-4 my-4">
           <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-rose-300/60" />
@@ -103,35 +110,45 @@ export default function Hero({
           <div className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-rose-300/60" />
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-white/90 mb-10">
-          <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-rose-300" />
-          <span className="text-sm sm:text-base font-medium">
-            {weddingLocation}
-          </span>
-        </div>
-          
-        </div>
+        <Reveal delay={300}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-white/90 mb-10">
+            <div className="flex items-center gap-2 max-w-full px-2">
+              <MapPin className="w-4 h-4 shrink-0 text-rose-300" />
+              <span className="text-sm sm:text-base font-medium text-center">
+                {weddingLocation}
+              </span>
+            </div>
+          </div>
+        </Reveal>
 
         {/* Countdown regressivo — Client Component */}
-        <CountDown targetDate={weddingDate} />
+        <Reveal delay={400}>
+          <CountDown targetDate={weddingDate} />
+        </Reveal>
 
         {/* CTA Scroll */}
-        <a
-          href="#historia"
-          className="mt-10 mb-1 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:scale-105"
-        >
-          Nossa História
-          <span className="animate-bounce">↓</span>
-        </a>
+        <Reveal delay={500}>
+          <a
+            href="#historia"
+            className="mt-10 mb-8 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:scale-105"
+          >
+            Nossa História
+            <span className="animate-bounce">↓</span>
+          </a>
+        </Reveal>
       </div>
 
-      {/* Seta de scroll decorativa no fundo */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-20">
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center pt-2">
-          <div className="w-1 h-3 bg-white/60 rounded-full animate-bounce" />
-        </div>
-      </div>
+      {/*
+       * Degradê que dissolve a imagem para branco, sempre logo ABAIXO do
+       * conteúdo (fica no fluxo normal da section — como irmão do bloco de
+       * texto, e não dentro dele — nunca sobrepõe o botão, e usa w-full
+       * em vez de w-screen para não gerar overflow horizontal por causa
+       * da largura da barra de rolagem).
+       */}
+      <div
+        className="relative z-10 w-full h-16 bg-gradient-to-b from-transparent to-white pointer-events-none"
+        aria-hidden="true"
+      />
     </section>
   );
 }

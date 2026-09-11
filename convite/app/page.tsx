@@ -12,6 +12,7 @@ import Hero from "@/components/Hero";
 import Story from "@/components/Story";
 import Gallery from "@/components/Gallery";
 import RSVP from "@/components/RSVP";
+import Reveal from "@/components/Reveal";
 import { timelineEvents } from "@/data/timeline";
 import { MapPin, Clock, Heart, Phone, Gift } from "lucide-react";
 
@@ -44,40 +45,44 @@ export default function Home() {
         weddingTime={WEDDING_CONFIG.time}
       />
 
-      {/* ─── NAV STICKY - menu ────────────────────────────────────── */}
+      {/* ─── NAV FLUTUANTE - pill de vidro que segue a rolagem ──────── */}
+      {/*
+       * Os links âncora ficam num trecho com scroll horizontal próprio
+       * (cabem sem rolar na maioria das telas, mas não quebram em telas
+       * bem estreitas). O CTA "Presentes" fica fora do scroll — sempre
+       * visível, já que é a ação mais importante do menu.
+       */}
       <nav
-        className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm"
+        className="sticky top-3 z-40 flex justify-center px-3"
         aria-label="Navegação principal"
       >
-        <div className="max-w-6xl mx-auto px-4">
-          <ul className="flex items-center justify-center gap-1 sm:gap-2 h-14 overflow-x-auto">
+        <div className="flex items-center gap-1 max-w-full h-12 pl-1.5 pr-1 rounded-full bg-white/80 backdrop-blur-xl border border-gray-100 shadow-lg shadow-gray-300/30">
+          <ul className="flex items-center gap-0 sm:gap-2 overflow-x-auto scrollbar-hide">
             {[
-              { href: "#historia", label: "Nossa História", external: false },
-              { href: "#galeria", label: "Galeria", external: false },
-              { href: "#local", label: "Local", external: false },
-              { href: "#confirmar", label: "Confirmar", external: false },
+              { href: "#historia", label: "História" },
+              { href: "#galeria", label: "Galeria" },
+              { href: "#local", label: "Local" },
+              { href: "#confirmar", label: "RSVP" },
             ].map((item) => (
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="whitespace-nowrap px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-gray-600 hover:text-rose-500 hover:bg-rose-50 transition-all duration-200"
+                  className="whitespace-nowrap px-2 sm:px-4 py-2 rounded-full text-[13px] sm:text-sm font-medium text-gray-600 hover:text-rose-500 hover:bg-rose-50 transition-all duration-200"
                 >
                   {item.label}
                 </a>
               </li>
             ))}
-
-            {/* Link especial: Presentes → página dedicada /presentes */}
-            <li>
-              <Link
-                href="/presentes"
-                className="whitespace-nowrap flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all duration-200 border border-rose-200"
-              >
-                <Gift className="w-3.5 h-3.5" />
-                Presentes
-              </Link>
-            </li>
           </ul>
+
+          {/* Link especial: Presentes → página dedicada /presentes (sempre visível) */}
+          <Link
+            href="/presentes"
+            className="shrink-0 whitespace-nowrap flex items-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-md shadow-rose-200"
+          >
+            <Gift className="w-3.5 h-3.5" />
+            Presentes
+          </Link>
         </div>
       </nav>
 
@@ -92,8 +97,12 @@ export default function Home() {
        * A lista de presentes agora tem página própria em /presentes.
        * Esta section é uma chamada visual que direciona o usuário.
        */}
-      <section className="py-16 bg-gradient-to-r from-rose-50 to-pink-50 border-y border-rose-100">
-        <div className="max-w-2xl mx-auto px-4 text-center">
+      <section className="relative py-16 bg-gradient-to-r from-rose-50 to-pink-50 border-y border-rose-100 overflow-hidden">
+        {/* Blobs decorativos para dar profundidade */}
+        <div className="absolute -top-10 -left-10 w-56 h-56 rounded-full bg-rose-200/40 blur-3xl pointer-events-none" aria-hidden="true" />
+        <div className="absolute -bottom-16 -right-10 w-64 h-64 rounded-full bg-amber-200/30 blur-3xl pointer-events-none" aria-hidden="true" />
+
+        <Reveal className="relative max-w-2xl mx-auto px-4 text-center">
           <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-md shadow-rose-100">
             <Gift className="w-8 h-8 text-rose-400" />
           </div>
@@ -111,7 +120,7 @@ export default function Home() {
             <Gift className="w-5 h-5" />
             Ver Lista de Presentes
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ─── 5. LOCAL & INFORMAÇÕES ────────────────────────── */}
@@ -120,7 +129,7 @@ export default function Home() {
         className="scroll-mt-16 py-20 sm:py-32 bg-white"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
               ✦ Como chegar
             </span>
@@ -132,64 +141,72 @@ export default function Home() {
               <span className="text-rose-300">✦</span>
               <div className="h-px w-12 bg-rose-200" />
             </div>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div className="bg-rose-50 border border-rose-100 rounded-3xl p-6 text-center">
-              <div className="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-6 h-6 text-rose-500" />
+            <Reveal delay={0}>
+              <div className="h-full bg-rose-50 border border-rose-100 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-rose-100">
+                <div className="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Clock className="w-6 h-6 text-rose-500" />
+                </div>
+                <h3 className="font-serif font-bold text-gray-800 mb-1">Data &amp; Hora</h3>
+                <p className="text-sm text-gray-600">10 de Abril de 2027</p>
+                <p className="text-sm font-semibold text-rose-500 mt-1">às {WEDDING_CONFIG.time}</p>
               </div>
-              <h3 className="font-serif font-bold text-gray-800 mb-1">Data &amp; Hora</h3>
-              <p className="text-sm text-gray-600">10 de Abril de 2027</p>
-              <p className="text-sm font-semibold text-rose-500 mt-1">às {WEDDING_CONFIG.time}</p>
-            </div>
+            </Reveal>
 
-            <div className="bg-amber-50 border border-amber-100 rounded-3xl p-6 text-center">
-              <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-6 h-6 text-amber-500" />
+            <Reveal delay={100}>
+              <div className="h-full bg-amber-50 border border-amber-100 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-100">
+                <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="w-6 h-6 text-amber-500" />
+                </div>
+                <h3 className="font-serif font-bold text-gray-800 mb-1">Local</h3>
+                <p className="text-sm text-gray-600">{WEDDING_CONFIG.location}</p>
+                <a
+                  href={WEDDING_CONFIG.mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-amber-600 hover:text-amber-700 mt-1 inline-block transition-colors"
+                >
+                  Ver no Maps →
+                </a>
               </div>
-              <h3 className="font-serif font-bold text-gray-800 mb-1">Local</h3>
-              <p className="text-sm text-gray-600">{WEDDING_CONFIG.location}</p>
-              <a
-                href={WEDDING_CONFIG.mapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-amber-600 hover:text-amber-700 mt-1 inline-block transition-colors"
-              >
-                Ver no Maps →
-              </a>
-            </div>
+            </Reveal>
 
-            <div className="bg-pink-50 border border-pink-100 rounded-3xl p-6 text-center">
-              <div className="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-6 h-6 text-pink-500" />
+            <Reveal delay={200}>
+              <div className="h-full bg-pink-50 border border-pink-100 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-100">
+                <div className="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Phone className="w-6 h-6 text-pink-500" />
+                </div>
+                <h3 className="font-serif font-bold text-gray-800 mb-1">Contato</h3>
+                <p className="text-sm text-gray-600">Dúvidas? Fale conosco!</p>
+                <a
+                  href={`https://wa.me/${WEDDING_CONFIG.whatsapp.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-pink-500 hover:text-pink-600 mt-1 inline-block transition-colors"
+                >
+                  WhatsApp →
+                </a>
               </div>
-              <h3 className="font-serif font-bold text-gray-800 mb-1">Contato</h3>
-              <p className="text-sm text-gray-600">Dúvidas? Fale conosco!</p>
-              <a
-                href={`https://wa.me/${WEDDING_CONFIG.whatsapp.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-pink-500 hover:text-pink-600 mt-1 inline-block transition-colors"
-              >
-                WhatsApp →
-              </a>
-            </div>
+            </Reveal>
           </div>
 
-          <div className="w-full h-64 rounded-3xl overflow-hidden bg-gray-100 border border-gray-200 relative">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3838.251784812169!2d-48.0498621!3d-15.843358599999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a32949fa84331%3A0x6e006e0f6f84156e!2sPar%C3%B3quia%20Nossa%20Senhora%20de%20F%C3%A1tima!5e0!3m2!1spt-BR!2sbr!4v1786836395471!5m2!1spt-BR!2sbr"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Mapa do local do casamento"
-              className="grayscale hover:grayscale-0 transition-all duration-500"
-            />
-          </div>
+          <Reveal>
+            <div className="w-full h-64 rounded-3xl overflow-hidden bg-gray-100 border border-gray-200 relative shadow-lg shadow-gray-200/60">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3838.251784812169!2d-48.0498621!3d-15.843358599999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a32949fa84331%3A0x6e006e0f6f84156e!2sPar%C3%B3quia%20Nossa%20Senhora%20de%20F%C3%A1tima!5e0!3m2!1spt-BR!2sbr!4v1786836395471!5m2!1spt-BR!2sbr"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mapa do local do casamento"
+                className="grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -197,7 +214,7 @@ export default function Home() {
       <RSVP />
 
       {/* ─── FOOTER ────────────────────────────────────────── */}
-      <footer className="bg-gray-950 py-10 text-center">
+      <footer className="relative bg-gray-950 py-10 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
           <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
           <p className="font-serif text-xl text-white">

@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import { Heart, Send, CheckCircle } from "lucide-react";
+import Reveal from "./Reveal";
 
 // Estado interno do formulário
 interface FormState {
@@ -46,7 +47,7 @@ export default function RSVP() {
   return (
     <section
       id="confirmar"
-      className="scroll-mt-16 py-20 sm:py-32 bg-gradient-to-br from-gray-950 via-rose-950/20 to-gray-950 relative overflow-hidden"
+      className="scroll-mt-16 py-20 sm:py-32 bg-gray-950 bg-gradient-to-br from-gray-950 via-rose-950/20 to-gray-950 relative overflow-hidden"
     >
       {/* Elementos decorativos de fundo */}
       <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-rose-500/5 blur-3xl" aria-hidden="true" />
@@ -54,7 +55,7 @@ export default function RSVP() {
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
         {/* Cabeçalho */}
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12">
           <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
             ✦ Aguardamos você
           </span>
@@ -71,7 +72,7 @@ export default function RSVP() {
             <strong className="text-rose-400">30 de outubro de 2026</strong> para
             que possamos garantir seu lugar especial neste dia.
           </p>
-        </div>
+        </Reveal>
 
         {/* Formulário ou mensagem de sucesso */}
         {submitted ? (

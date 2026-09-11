@@ -49,12 +49,13 @@ function calculateTimeLeft(targetDate: string): TimeLeft | null {
 function TimeUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 min-w-[64px] sm:min-w-[80px]">
-        <span className="text-3xl sm:text-4xl font-bold text-white tabular-nums">
+      <div className="relative overflow-hidden bg-white/15 backdrop-blur-xl border border-white/25 rounded-xl sm:rounded-2xl px-2.5 sm:px-6 py-2 sm:py-4 min-w-[52px] sm:min-w-[80px] shadow-[0_0_25px_-8px_rgba(176,205,223,0.6)]">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/15 to-transparent pointer-events-none" aria-hidden="true" />
+        <span className="relative text-xl sm:text-4xl font-bold text-white tabular-nums">
           {String(value).padStart(2, "0")}
         </span>
       </div>
-      <span className="mt-2 text-xs sm:text-sm text-white/60 uppercase tracking-widest font-medium">
+      <span className="mt-1.5 sm:mt-2 text-[10px] sm:text-sm text-white/60 uppercase tracking-widest font-medium">
         {label}
       </span>
     </div>
@@ -74,7 +75,9 @@ export default function CountDown({ targetDate }: CountDownProps) {
    * O return faz cleanup — essencial para evitar memory leaks!
    */
   useEffect(() => {
-    // Primeira execução imediata
+    // Primeira execução imediata: síncrona de propósito, para evitar
+    // piscar o estado "chegou o grande dia" antes do 1º tick do interval.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTimeLeft(calculateTimeLeft(targetDate));
 
     const timer = setInterval(() => {
@@ -95,13 +98,13 @@ export default function CountDown({ targetDate }: CountDownProps) {
   }
 
   return (
-    <div className="flex items-end justify-center gap-3 sm:gap-5">
+    <div className="flex items-end justify-center gap-1.5 sm:gap-5">
       <TimeUnit value={timeLeft.days} label="dias" />
-      <span className="text-white/50 text-3xl font-light pb-8">:</span>
+      <span className="text-white/50 text-xl sm:text-3xl font-light pb-5 sm:pb-8">:</span>
       <TimeUnit value={timeLeft.hours} label="horas" />
-      <span className="text-white/50 text-3xl font-light pb-8">:</span>
+      <span className="text-white/50 text-xl sm:text-3xl font-light pb-5 sm:pb-8">:</span>
       <TimeUnit value={timeLeft.minutes} label="minutos" />
-      <span className="text-white/50 text-3xl font-light pb-8">:</span>
+      <span className="text-white/50 text-xl sm:text-3xl font-light pb-5 sm:pb-8">:</span>
       <TimeUnit value={timeLeft.seconds} label="segundos" />
     </div>
   );

@@ -121,14 +121,20 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <ul className="divide-y divide-gray-50 px-5 py-3">
               {items.map(({ gift, quantity }) => (
                 <li key={gift.id} className="py-4 flex gap-4">
-                  {/* Imagem */}
+                  {/* Imagem (ou ícone, para presentes sem foto) */}
                   <div className="relative w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-50">
-                    <Image
-                      src={gift.imagePath}
-                      alt={gift.title}
-                      fill
-                      className="object-cover"
-                    />
+                    {gift.imagePath ? (
+                      <Image
+                        src={gift.imagePath}
+                        alt={gift.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-rose-50 to-amber-50">
+                        <Gift className="w-7 h-7 text-rose-300" aria-hidden="true" />
+                      </div>
+                    )}
                   </div>
 
                   {/* Info */}

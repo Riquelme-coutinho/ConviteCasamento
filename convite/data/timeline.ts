@@ -13,7 +13,7 @@ export interface TimelineEvent {
   title: string;
   description: string;
   // Nome do ícone do Lucide React a ser usado neste marco
-  icon: "Heart" | "Coffee" | "MapPin" | "Star" | "Ring" | "Plane" | "Play" ;
+  icon: "Heart" | "Coffee" | "MapPin" | "Star" | "Ring" | "Plane" | "Play" | "PawPrint" | "Home";
   // Cor do ícone e accent da timeline
   color: string;
 }
@@ -23,54 +23,45 @@ export const timelineEvents: TimelineEvent[] = [
   {
     id: 1,
     year: "2016",
-    title: "O Grande Começo",
+    title: "O Encontro",
     description:
-      "Nossa história começou em 10 de outubro de 2016, quando ainda muito jovens nos conhecemos e escolhemos dar início a essa grande e linda história de amor.",
+      "Em 10 de outubro de 2016, duas vidas se cruzaram: ela com 19 anos, ele com 20 — ainda no início da faculdade, cada um no seu curso. Sem saber, ali começava uma das histórias mais importantes de suas vidas.",
     icon: "Play",
     color: "rose",
   },
   {
     id: 2,
-    year: "2023",
-    title: "Primeira Viagem Juntos",
+    year: "2016 – 2023",
+    title: "Crescendo Juntos",
     description:
-      "Exploramos Gramado juntos pela primeira vez. Entre fondue, neve e muitas risadas, entendemos que queríamos viver cada aventura ao lado um do outro.",
-    icon: "MapPin",
+      "Ao longo dos anos vieram sonhos, desafios, conquistas e mudanças — e, em cada fase, os dois seguiram se escolhendo. Cresceram juntos, aprenderam juntos e descobriram a vida lado a lado.",
+    icon: "Heart",
     color: "amber",
   },
   {
     id: 3,
-    year: "2021",
-    title: "Começamos a Morar Juntos",
+    year: "Outubro de 2023",
+    title: "O Pedido e a Chegada da Moana",
     description:
-      "Após dois anos de namoro, demos o grande passo: dividimos o mesmo teto, as mesmas xícaras de café pela manhã e os mesmos sonhos para o futuro.",
-    icon: "Heart",
+      "Veio o pedido de casamento e, junto dele, um presente que completaria ainda mais a família: a Moana. 🐶",
+    icon: "PawPrint",
     color: "pink",
   },
   {
     id: 4,
-    year: "2023",
-    title: "O Pedido de Casamento",
+    year: "Desde 2023",
+    title: "Construindo Nosso Lar",
     description:
-      "Numa noite estrelada à beira-mar, com o coração acelerado, ele se ajoelhou e ela disse sim. O começo do maior capítulo das nossas vidas.",
-    icon: "Star",
-    color: "rose",
-  },
-  {
-    id: 5,
-    year: "2024",
-    title: "A Grande Viagem",
-    description:
-      "Celebramos o noivado com uma viagem inesquecível pela Europa. Paris, Roma, Lisboa — cada cidade, uma memória que guardamos para sempre.",
-    icon: "Plane",
+      "Desde então, seguem vivendo intensamente, construindo o lar dos sonhos e encontrando, um no outro, o seu porto seguro — uma história feita de amor, companheirismo e superação.",
+    icon: "Home",
     color: "amber",
   },
   {
-    id: 6,
-    year: "2026",
+    id: 5,
+    year: "2027",
     title: "O Grande Dia",
     description:
-      "E agora chegou o momento mais esperado: prometemos um ao outro eternidade, na presença de todos que amamos. Sejam bem-vindos à nossa festa!",
+      "Depois de tantos anos, chega o momento de receber o Sacramento do Matrimônio e, diante de Deus, entregar a Ele a própria história e a família que construíram juntos.",
     icon: "Ring",
     color: "rose",
   },

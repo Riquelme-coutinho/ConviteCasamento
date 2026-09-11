@@ -22,14 +22,19 @@ import {
   Heart,
   CheckCircle2,
   SlidersHorizontal,
+  Gift as GiftIcon,
+  Home,
+  ChefHat,
+  Plane,
+  Sparkles,
 } from "lucide-react";
-import { gifts, categoryLabel, formatBRL, type GiftCategory } from "@/data/gifts";
+import { gifts, categoryLabel, formatBRL, type Gift, type GiftCategory } from "@/data/gifts";
 import { useCart } from "@/context/CartContext";
 import CartDrawer from "@/components/CartDrawer";
+import Reveal from "@/components/Reveal";
 
 // Categorias disponíveis para o filtro
-const ALL_CATEGORIES = "todas" as const;
-type FilterValue = GiftCategory | typeof ALL_CATEGORIES;
+type FilterValue = GiftCategory | "todas";
 
 const filterOptions: { value: FilterValue; label: string }[] = [
   { value: "todas", label: "🎁 Todos" },
@@ -37,10 +42,11 @@ const filterOptions: { value: FilterValue; label: string }[] = [
   { value: "cozinha", label: "🍳 Cozinha" },
   { value: "viagem", label: "✈️ Viagem" },
   { value: "experiência", label: "✨ Experiência" },
+  { value: "presente", label: "💳 Presente" },
 ];
 
 export default function PresentesPage() {
-  const { addItem, isInCart, totalItems } = useCart();
+  const { addItem, isInCart, totalItems, totalPrice } = useCart();
 
   // Estado do filtro de categoria
   const [activeFilter, setActiveFilter] = useState<FilterValue>("todas");
@@ -77,20 +83,21 @@ export default function PresentesPage() {
 
       {/* ── Header ─────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
           {/* Voltar */}
           <Link
             href="/"
-            className="flex items-center gap-2 text-gray-500 hover:text-rose-500 transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 sm:gap-2 text-gray-500 hover:text-rose-500 transition-colors text-sm font-medium whitespace-nowrap shrink-0"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Voltar ao convite
+            <ArrowLeft className="w-4 h-4 shrink-0" />
+            <span className="hidden sm:inline">Voltar ao convite</span>
+            <span className="sm:hidden">Voltar</span>
           </Link>
 
           {/* Título */}
-          <div className="flex items-center gap-2">
-            <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
-            <h1 className="font-serif text-lg font-bold text-gray-800">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <Heart className="w-4 h-4 shrink-0 text-rose-400 fill-rose-400 hidden sm:block" />
+            <h1 className="font-serif text-base sm:text-lg font-bold text-gray-800 whitespace-nowrap truncate">
               Lista de Presentes
             </h1>
           </div>
@@ -98,7 +105,7 @@ export default function PresentesPage() {
           {/* Ícone do carrinho */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className="relative flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+            className="relative flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl px-3 sm:px-4 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95 shrink-0"
             aria-label={`Abrir carrinho com ${totalItems} itens`}
           >
             <ShoppingBag className="w-4 h-4" />
@@ -113,7 +120,7 @@ export default function PresentesPage() {
       </header>
 
       {/* ── Hero da página ──────────────────────────────────── */}
-      <div className="text-center pt-12 pb-8 px-4">
+      <Reveal className="text-center pt-12 pb-8 px-4">
         <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
           ❤ Com carinho
         </span>
@@ -130,7 +137,7 @@ export default function PresentesPage() {
           escolha um item abaixo — pode pagar via <strong>Pix</strong> ou{" "}
           <strong>cartão de crédito</strong>.
         </p>
-      </div>
+      </Reveal>
 
       {/* ── Filtros ─────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8">
@@ -142,8 +149,8 @@ export default function PresentesPage() {
               onClick={() => setActiveFilter(opt.value)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 activeFilter === opt.value
-                  ? "bg-rose-500 text-white shadow-md shadow-rose-200"
-                  : "bg-white text-gray-600 border border-gray-200 hover:border-rose-300 hover:text-rose-500"
+                  ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-200 scale-105"
+                  : "bg-white text-gray-600 border border-gray-200 hover:border-rose-300 hover:text-rose-500 hover:scale-105"
               }`}
             >
               {opt.label}
@@ -160,24 +167,28 @@ export default function PresentesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredGifts.map((gift) => {
+            {filteredGifts.map((gift, index) => {
               const added = justAdded.has(gift.id);
               const inCart = isInCart(gift.id);
 
               return (
+                <Reveal key={gift.id} delay={(index % 4) * 75}>
                 <article
-                  key={gift.id}
-                  className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 border border-gray-100"
+                  className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-rose-200/50 transition-all duration-300 hover:-translate-y-1.5 border border-gray-100"
                 >
-                  {/* Imagem */}
+                  {/* Imagem (ou card de valor, para presentes sem foto) */}
                   <div className="relative h-56 bg-gray-50 overflow-hidden">
-                    <Image
-                      src={gift.imagePath}
-                      alt={gift.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,25vw"
-                    />
+                    {gift.imagePath ? (
+                      <Image
+                        src={gift.imagePath}
+                        alt={gift.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,25vw"
+                      />
+                    ) : (
+                      <GiftPlaceholderVisual gift={gift} />
+                    )}
                     {/* Badge de categoria */}
                     <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-gray-600 shadow-sm">
                       {categoryLabel[gift.category]}
@@ -230,6 +241,7 @@ export default function PresentesPage() {
                     </div>
                   </div>
                 </article>
+                </Reveal>
               );
             })}
           </div>
@@ -246,11 +258,7 @@ export default function PresentesPage() {
             <ShoppingBag className="w-5 h-5" />
             <span className="font-bold text-sm">{totalItems} {totalItems === 1 ? "item" : "itens"}</span>
             <span className="font-semibold text-rose-200 text-sm">
-              {formatBRL(
-                gifts
-                  .filter(g => g.id === g.id) // placeholder — o total vem do context
-                  .reduce((s, _g) => s, 0)
-              )}
+              {formatBRL(totalPrice)}
             </span>
           </button>
         </div>
@@ -268,5 +276,48 @@ function Plus({ className }: { className?: string }) {
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
     </svg>
+  );
+}
+
+// Ícone representativo de cada categoria, usado quando o presente não tem foto própria
+const categoryIcon: Record<GiftCategory, typeof GiftIcon> = {
+  lar: Home,
+  cozinha: ChefHat,
+  viagem: Plane,
+  experiência: Sparkles,
+  presente: GiftIcon,
+};
+
+/**
+ * Visual usado no lugar da foto para presentes sem imagem própria.
+ * Cartões-presente (valor fixo) mostram o valor em destaque; os demais
+ * mostram o ícone da categoria + o título do presente.
+ */
+function GiftPlaceholderVisual({ gift }: { gift: Gift }) {
+  const Icon = categoryIcon[gift.category];
+
+  return (
+    <div className="relative h-full w-full flex items-center justify-center bg-gradient-to-br from-rose-50 via-rose-100 to-amber-50">
+      <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-amber-200/40 blur-2xl" aria-hidden="true" />
+      <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-rose-200/50 blur-2xl" aria-hidden="true" />
+      {gift.category === "presente" ? (
+        <div className="relative text-center">
+          <Icon className="w-6 h-6 text-rose-400 mx-auto mb-2" aria-hidden="true" />
+          <p className="text-xs uppercase tracking-widest text-gray-400 font-medium mb-1">
+            Cartão Presente
+          </p>
+          <p className="text-4xl font-serif font-bold text-rose-500">
+            {formatBRL(gift.priceInCents)}
+          </p>
+        </div>
+      ) : (
+        <div className="relative text-center px-6">
+          <Icon className="w-8 h-8 text-rose-400 mx-auto mb-3" aria-hidden="true" />
+          <p className="font-serif text-base font-semibold text-gray-700 leading-snug">
+            {gift.title}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

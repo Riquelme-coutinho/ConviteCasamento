@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { CartProvider } from "@/context/CartContext";
+import MusicPlayer from "@/components/MusicPlayer";
 import "./globals.css";
 
 /**
@@ -34,13 +35,13 @@ const inter = Inter({
  * O Next.js App Router usa este objeto para gerar as meta tags automaticamente.
  */
 export const metadata: Metadata = {
-  title: "Casamento de Carol & Gabriel — 14 de Novembro de 2026",
+  title: "Casamento de Carolinne & Gabriel — 10 de Abril de 2027",
   description:
-    "Você está convidado para celebrar o amor de Lucas e Beatriz. Confirme sua presença e veja todos os detalhes do nosso grande dia.",
-  keywords: ["casamento", "convite", "Lucas e Beatriz", "2026"],
+    "Você está convidado para celebrar o amor de Carolinne e Gabriel. Confirme sua presença e veja todos os detalhes do nosso grande dia.",
+  keywords: ["casamento", "convite", "Carolinne e Gabriel", "2027"],
   openGraph: {
-    title: "Casamento de Carol & Gabriel",
-    description: "14 de novembro de 2026 — Um dia para lembrar para sempre.",
+    title: "Casamento de Carolinne & Gabriel",
+    description: "10 de abril de 2027 — Um dia para lembrar para sempre.",
     type: "website",
     locale: "pt_BR",
   },
@@ -56,6 +57,8 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-white text-gray-900">
         {/* CartProvider torna o estado do carrinho acessível em toda a aplicação */}
         <CartProvider>{children}</CartProvider>
+        {/* Música de fundo — fica fora do CartProvider pois não precisa do carrinho */}
+        <MusicPlayer />
       </body>
     </html>
   );

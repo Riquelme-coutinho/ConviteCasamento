@@ -35,9 +35,9 @@ const PIX_KEY = "casamento@emaildosnoivos.com.br";
 /**
  * Link de pagamento padrão (fallback).
  * Cada presente pode ter seu próprio link em data/gifts.ts.
- * Se nenhum link for fornecido, este é usado.
+ * Vazio = nenhum link de cartão disponível, aba Cartão fica só informativa.
  */
-const DEFAULT_PAYMENT_LINK = "casamento@emaildosnoivos.com.br";
+const DEFAULT_PAYMENT_LINK = "";
 
 // ────────────────────────────────────────────────────────────
 
@@ -235,6 +235,16 @@ export default function PaymentModal({
                 <span className="bg-gray-100 rounded px-2 py-1 font-mono font-bold text-gray-500">Elo</span>
                 <span className="bg-gray-100 rounded px-2 py-1 font-mono font-bold text-gray-500">Amex</span>
               </div>
+
+              {hasCardLink && (
+                <button
+                  onClick={handleCardPayment}
+                  className="w-full flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl px-6 py-3.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Pagar com Cartão
+                  <ExternalLink className="w-4 h-4" />
+                </button>
+              )}
 
               <p className="text-xs text-gray-400 text-center flex items-center gap-1">
                 🔒 Pagamento processado com segurança

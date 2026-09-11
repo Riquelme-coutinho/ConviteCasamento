@@ -15,9 +15,12 @@ import {
   MapPin,
   Star,
   Plane,
+  PawPrint,
+  Home,
   type LucideProps,
 } from "lucide-react";
 import { TimelineEvent } from "@/data/timeline";
+import Reveal from "./Reveal";
 
 // Mapa de ícones: conecta a string do JSON ao componente Lucide
 const IconMap: Record<string, React.ComponentType<LucideProps>> = {
@@ -27,6 +30,8 @@ const IconMap: Record<string, React.ComponentType<LucideProps>> = {
   Star,
   Plane,
   Play,
+  PawPrint,
+  Home,
   // "Ring" não existe em lucide, usamos Heart com cor diferente
   Ring: Heart,
 };
@@ -79,8 +84,9 @@ export default function Story({ events }: StoryProps) {
             <div className="h-px w-12 bg-rose-200" />
           </div>
           <p className="mt-6 text-gray-500 max-w-xl mx-auto leading-relaxed">
-            Cada capítulo dessa história foi escrito com amor, cumplicidade e
-            muito riso. Vamos contar um pouquinho de nossos momentos que nos trouxeram até este dia tão especial.
+            Uma história de amor, companheirismo e superação — duas pessoas
+            que cresceram juntas e aprenderam que amar também é caminhar
+            lado a lado, especialmente nos dias difíceis.
           </p>
         </div>
 
@@ -97,8 +103,8 @@ export default function Story({ events }: StoryProps) {
               const isLeft = index % 2 === 0;
 
               return (
+                <Reveal key={event.id} from={isLeft ? "left" : "right"}>
                 <div
-                  key={event.id}
                   className={`relative flex md:items-center ${
                     isLeft ? "md:flex-row" : "md:flex-row-reverse"
                   } flex-col gap-6 md:gap-0 mb-10 sm:mb-20`}
@@ -155,10 +161,29 @@ export default function Story({ events }: StoryProps) {
                     </span>
                   </div>
                 </div>
+                </Reveal>
               );
             })}
           </div>
         </div>
+
+        {/* Citação de fechamento */}
+        <Reveal delay={200}>
+          <div className="mt-16 sm:mt-24 max-w-2xl mx-auto text-center">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="h-px w-12 bg-rose-200" />
+              <Heart className="w-4 h-4 text-rose-300 fill-rose-300" aria-hidden="true" />
+              <div className="h-px w-12 bg-rose-200" />
+            </div>
+            <p className="font-serif italic text-xl sm:text-2xl text-gray-700 leading-relaxed">
+              &ldquo;Dois jovens que se encontraram por acaso, uma vida inteira
+              construída lado a lado e um amor que escolhemos continuar
+              vivendo todos os dias. E, se lá em 2016 alguém dissesse que
+              aquele encontro mudaria nossas vidas para sempre, talvez a
+              gente nem acreditasse. Mas Deus já sabia.&rdquo;
+            </p>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
