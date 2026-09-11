@@ -62,7 +62,7 @@ export default function Hero({
       <div className="absolute bottom-16 right-8 w-48 h-48 rounded-full bg-amber-300/10 blur-3xl" aria-hidden="true" />
 
       {/* Conteúdo principal — z-index garante posicionamento sobre o overlay */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center px-4 pb-16 sm:pb-20 max-w-4xl mx-auto">
         {/* Tag decorativa */}
         <Reveal>
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-8">
@@ -139,14 +139,16 @@ export default function Hero({
       </div>
 
       {/*
-       * Degradê que dissolve a imagem para branco, sempre logo ABAIXO do
-       * conteúdo (fica no fluxo normal da section — como irmão do bloco de
-       * texto, e não dentro dele — nunca sobrepõe o botão, e usa w-full
-       * em vez de w-screen para não gerar overflow horizontal por causa
-       * da largura da barra de rolagem).
+       * Degradê que dissolve a imagem para branco. Fica ancorado no rodapé
+       * da própria section (absolute, não soma altura ao conteúdo) — assim
+       * a imagem/overlay de fundo (que usam inset-0) continuam cobrindo
+       * exatamente a altura real da section, sem "esticar" o degradê
+       * escuro do overlay para dentro dessa faixa branca.
+       * O respiro (pb-16/20 acima, no conteúdo) garante que ele nunca
+       * fique por cima do botão "Nossa História".
        */}
       <div
-        className="relative z-10 w-full h-16 bg-gradient-to-b from-transparent to-white pointer-events-none"
+        className="absolute inset-x-0 bottom-0 z-10 h-16 sm:h-20 bg-gradient-to-b from-transparent to-white pointer-events-none"
         aria-hidden="true"
       />
     </section>
