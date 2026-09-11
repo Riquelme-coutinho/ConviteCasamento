@@ -4,7 +4,7 @@
     {
       "name": "convite-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "convite"],
+      "runtimeArgs": ["run", "dev"],
       "port": 3000
     }
   ]
