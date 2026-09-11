@@ -218,7 +218,7 @@ export default function Home() {
         <div className="flex items-center justify-center gap-2 mb-3">
           <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
           <p className="font-serif text-xl text-white">
-            {WEDDING_CONFIG.groom} &amp; {WEDDING_CONFIG.bride}
+            {WEDDING_CONFIG.bride} &amp; {WEDDING_CONFIG.groom}
           </p>
           <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
         </div>
