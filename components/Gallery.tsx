@@ -1,13 +1,12 @@
 /**
  * components/Gallery.tsx
  *
- * Seção de Galeria de Fotos com layout "bento" (fotos em destaque
- * ocupam duas colunas) e lightbox em tela cheia ao clicar.
+ * Seção de Galeria de Fotos do casal, em formato retrato (ensaio),
+ * com lightbox em tela cheia ao clicar.
  *
  * Layout:
  *   - Mobile: 1 coluna
- *   - Tablet (md): 2 colunas
- *   - Desktop (lg): 3 colunas, fotos "featured" ocupam 2 colunas
+ *   - Tablet/Desktop (sm+): 3 colunas
  *
  * Efeitos:
  *   - hover:scale-105 com transition suave
@@ -28,49 +27,27 @@ interface GalleryPhoto {
   src: string;
   alt: string;
   caption: string;
-  // Define fotos que ocupam mais espaço no grid
-  featured?: boolean;
 }
 
 // Dados das fotos — mova para data/ se preferir
 const photos: GalleryPhoto[] = [
   {
     id: 1,
-    src: "/gallery_1.png",
-    alt: "Casal ao pôr do sol na praia",
-    caption: "Nosso primeiro pôr do sol juntos",
-    featured: true,
+    src: "/gallery_couple_1.jpg",
+    alt: "Carolinne e Gabriel em ensaio fotográfico",
+    caption: "Só nós dois",
   },
   {
     id: 2,
-    src: "/gallery_2.png",
-    alt: "Pedido de casamento no jardim florido",
-    caption: "O momento do sim",
+    src: "/gallery_couple_2.jpg",
+    alt: "Carolinne e Gabriel celebrando com bolo e flores",
+    caption: "Agora vai ✨",
   },
   {
     id: 3,
-    src: "/gallery_3.png",
-    alt: "Mesa decorada para o evento",
-    caption: "Nossa mesa dos sonhos",
-  },
-  {
-    id: 4,
-    src: "/gallery_4.png",
-    alt: "Primeira dança do casal",
-    caption: "Nossa primeira dança",
-    featured: true,
-  },
-  {
-    id: 5,
-    src: "/gallery_5.png",
-    alt: "Alianças de casamento",
-    caption: "Os símbolos da nossa união",
-  },
-  {
-    id: 6,
-    src: "/gallery_6.png",
-    alt: "Cerimônia ao ar livre",
-    caption: "O altar dos nossos sonhos",
+    src: "/gallery_couple_3.jpg",
+    alt: "Carolinne e Gabriel em ensaio fotográfico com buquê",
+    caption: "O nosso abraço",
   },
 ];
 
@@ -119,18 +96,14 @@ export default function Gallery() {
           </div>
         </Reveal>
 
-        {/* Grid "bento" — fotos featured ocupam 2 colunas em telas sm+ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Grid — fotos em formato retrato, já que o ensaio é vertical */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {photos.map((photo, index) => (
-            <Reveal
-              key={photo.id}
-              delay={(index % 3) * 100}
-              className={photo.featured ? "sm:col-span-2" : ""}
-            >
+            <Reveal key={photo.id} delay={index * 100}>
               <div
                 onClick={() => setOpenPhoto(photo)}
                 className="group relative overflow-hidden rounded-2xl cursor-pointer h-full"
-                style={{ aspectRatio: photo.featured ? "2/1" : "1/1" }}
+                style={{ aspectRatio: "3/4" }}
               >
                 {/* Imagem com zoom suave no hover */}
                 <Image
@@ -176,7 +149,7 @@ export default function Gallery() {
           </button>
 
           <div
-            className="relative w-full max-w-4xl aspect-[4/3] sm:aspect-video"
+            className="relative w-full max-w-lg aspect-[3/4] max-h-[80vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
