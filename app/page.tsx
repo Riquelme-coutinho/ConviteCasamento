@@ -53,7 +53,7 @@ export default function Home() {
        * visível, já que é a ação mais importante do menu.
        */}
       <nav
-        className="sticky top-3 z-40 flex justify-center px-3"
+        className="sticky top-3 z-40 flex justify-center px-3 [transform:translateZ(0)] [will-change:transform]"
         aria-label="Navegação principal"
       >
         <div className="flex items-center gap-1 max-w-full h-12 pl-1.5 pr-1 rounded-full bg-white/80 backdrop-blur-xl border border-gray-100 shadow-lg shadow-gray-300/30">

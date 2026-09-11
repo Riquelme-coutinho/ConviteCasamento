@@ -15,7 +15,7 @@
     <rect x="172" y="80" width="8" height="110" rx="4"/>
     <rect x="194" y="100" width="8" height="90" rx="4"/>
   </g>
-  <g fill="#C89A20">
+  <g fill="#93A052">
     <path d="M222 130 l40 -25 a8 8 0 0 1 12 7 v40 a8 8 0 0 1 -12 7 l-40 -25 z"/>
     <path d="M222 130 h-6 v0 h6 z" fill="none"/>
   </g>

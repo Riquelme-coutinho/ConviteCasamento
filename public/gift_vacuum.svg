@@ -13,7 +13,7 @@
   <circle cx="200" cy="170" r="45" fill="#4589AA"/>
   <circle cx="200" cy="170" r="45" fill="none" stroke="#1E4E6B" stroke-width="4"/>
   <circle cx="200" cy="170" r="16" fill="#EEF5FA"/>
-  <circle cx="200" cy="170" r="7" fill="#C89A20"/>
+  <circle cx="200" cy="170" r="7" fill="#93A052"/>
   <circle cx="228" cy="150" r="4" fill="#EEF5FA"/>
   <!-- ondas de sinal -->
   <path d="M200 105 q0 -10 10 -14" fill="none" stroke="#62A3C3" stroke-width="4" stroke-linecap="round"/>

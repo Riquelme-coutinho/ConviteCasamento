@@ -82,7 +82,7 @@ export default function PresentesPage() {
     <div className="min-h-screen bg-gradient-to-b from-rose-50/40 via-white to-white">
 
       {/* ── Header ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm [transform:translateZ(0)] [will-change:transform]">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
           {/* Voltar */}
           <Link

@@ -16,6 +16,6 @@
   <rect x="243" y="135" width="4" height="30" fill="#62A3C3"/>
   <rect x="233" y="163" width="24" height="6" rx="3" fill="#62A3C3"/>
   <!-- vela -->
-  <rect x="194" y="150" width="12" height="26" rx="3" fill="#FAF0D5"/>
-  <path d="M200 150 q-6 -10 0 -18 q6 8 0 18" fill="#C89A20"/>
+  <rect x="194" y="150" width="12" height="26" rx="3" fill="#ECEEDA"/>
+  <path d="M200 150 q-6 -10 0 -18 q6 8 0 18" fill="#93A052"/>
 </svg>

@@ -59,18 +59,18 @@
   --color-pink-900: #0C3D66;
   --color-pink-950: #062348;
 
-  /* ── Família "amber" → dourado/areia quente (contraste com o azul) */
-  --color-amber-50:  #FDF8EE;
-  --color-amber-100: #FAF0D5;
-  --color-amber-200: #F4DFA0;
-  --color-amber-300: #EDCB6A;
-  --color-amber-400: #E4B43A;
-  --color-amber-500: #C89A20;
-  --color-amber-600: #A67C15;
-  --color-amber-700: #85610D;
-  --color-amber-800: #64480A;
-  --color-amber-900: #432F06;
-  --color-amber-950: #221803;
+  /* ── Família "amber" → verde oliva claro (contraste com o azul) ── */
+  --color-amber-50:  #F6F7EC;
+  --color-amber-100: #ECEEDA;
+  --color-amber-200: #D9DCB6;
+  --color-amber-300: #C3C98F;
+  --color-amber-400: #AEB86E;
+  --color-amber-500: #93A052;
+  --color-amber-600: #798442;
+  --color-amber-700: #5F6835;
+  --color-amber-800: #474D28;
+  --color-amber-900: #30341B;
+  --color-amber-950: #1D1F10;
 
   /* ── "gray-950" → navy profundo (fundo das sections dark) ─── */
   --color-gray-950: #072030;
