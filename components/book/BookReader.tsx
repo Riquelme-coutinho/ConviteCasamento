@@ -3,13 +3,12 @@
  *
  * Motor de navegação do convite em formato de "livro": usa a react-pageflip
  * (motor page-flip / StPageFlip) para um efeito real de folha curvando e
- * virando, mas com detecção de arrasto própria (ver `handleDragEnd`) — a
- * física nativa da lib só confirma um arrasto que percorre quase toda a
- * largura da página, o que é inviável num gesto real de dedo/mouse.
+ * virando. O arrasto nativo da lib fica bloqueado — a virada é disparada
+ * só pelos nossos controles (ver `flipTo`).
  *
- * Navegação: arrastar em qualquer ponto da página (touch/mouse), tocar na
- * metade direita/esquerda para avançar/voltar, teclado (← →) e um menu de
- * sumário para pular direto para qualquer página.
+ * Navegação: bolinhas nos cantos inferiores (avançar à direita, voltar à
+ * esquerda), teclado (← →) e um menu de sumário para pular direto para
+ * qualquer página.
  */
 "use client";
 
@@ -40,6 +39,9 @@ const FlipPage = forwardRef<HTMLDivElement, { children: ReactNode }>(function Fl
   );
 });
 
+/** Duração (ms) da folha virando — aumente para deixar mais lento */
+const FLIP_DURATION = 1400;
+
 export default function BookReader({ pages }: BookReaderProps) {
   const bookRef = useRef<FlipBookHandle>(null);
   // Nó DOM real do livro — usado para calcular um ponto de canto em
@@ -53,6 +55,8 @@ export default function BookReader({ pages }: BookReaderProps) {
   // repetir o mesmo alvo duas vezes seguidas também disparar) e um efeito
   // aplica o flip lendo a ref do livro fora da renderização.
   const [pendingFlip, setPendingFlip] = useState<{ index: number; token: number } | null>(null);
+  // Evita iniciar uma virada enquanto outra ainda está animando
+  const flippingRef = useRef(false);
 
   const goToIndex = useCallback((target: number) => {
     if (target < 0 || target >= pages.length) return;
@@ -71,7 +75,7 @@ export default function BookReader({ pages }: BookReaderProps) {
   const flipTo = useCallback((target: number) => {
     const pf = bookRef.current?.pageFlip();
     const el = bookWrapRef.current;
-    if (!pf || !el) return;
+    if (!pf || !el || flippingRef.current) return;
     if (target < 0 || target >= pf.getPageCount()) return;
 
     const collection = pf.getPageCollection();
@@ -114,12 +118,33 @@ export default function BookReader({ pages }: BookReaderProps) {
         new MouseEvent(type, { clientX: x, clientY: y, bubbles: true, cancelable: true, view: window })
       );
 
+    // O "arrasto" sintético anda ao longo de FLIP_DURATION (com easing) em
+    // vez de acontecer de uma vez — é ele que define a velocidade visível
+    // da folha virando. Durante a animação, movimentos reais do mouse/dedo
+    // são bloqueados para não "puxarem" a folha no meio do caminho.
+    flippingRef.current = true;
+    const blockReal = (e: Event) => {
+      if (e.isTrusted) e.stopPropagation();
+    };
+    window.addEventListener("mousemove", blockReal, true);
+    window.addEventListener("mouseup", blockReal, true);
+
     fire("mousedown", startX, block);
-    const steps = 12;
-    for (let i = 1; i <= steps; i++) {
-      fire("mousemove", startX + (endX - startX) * (i / steps), window);
-    }
-    fire("mouseup", endX, window);
+    const t0 = performance.now();
+    const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / FLIP_DURATION);
+      fire("mousemove", startX + (endX - startX) * ease(t), window);
+      if (t < 1) {
+        requestAnimationFrame(step);
+        return;
+      }
+      fire("mouseup", endX, window);
+      window.removeEventListener("mousemove", blockReal, true);
+      window.removeEventListener("mouseup", blockReal, true);
+      flippingRef.current = false;
+    };
+    requestAnimationFrame(step);
   }, []);
 
   useEffect(() => {
@@ -169,58 +194,23 @@ export default function BookReader({ pages }: BookReaderProps) {
     return () => observer.disconnect();
   }, [fitToFrame]);
 
-  // A lib só confirma sua própria detecção de arrasto quando o gesto
-  // percorre quase toda a largura do livro (ver `overshoot` em `flipTo`) —
-  // inviável para um arrasto real de dedo/mouse. Por isso detectamos o
-  // gesto nós mesmos, com um limiar bem mais tolerante, e nesse caso quem
-  // efetivamente toca a virada é o `flipTo` (chamado por `next`/`prev`).
-  // Não precisamos bloquear a detecção nativa da lib: como o limiar dela é
-  // tão mais alto que o nosso, um arrasto comum sempre falha nela primeiro
-  // (volta pra página atual) — e se ela ainda estiver animando esse
-  // "volta" quando `flipTo` dispara a virada de verdade, o próprio motor
-  // da lib já trata isso (interrompe a animação em andamento e começa a
-  // nova, ver `finishAnimation` em `Flip.flip`).
-  const DRAG_THRESHOLD = 48;
-  const TAP_THRESHOLD = 10;
-  const dragStart = useRef<{ x: number; y: number } | null>(null);
-  // Após um toque, o navegador emula mousedown/mouseup no mesmo ponto —
-  // ignoramos esses eventos para um toque não virar duas páginas.
-  const lastTouchAt = useRef(0);
-
-  const handleDragStart = useCallback((x: number, y: number) => {
-    dragStart.current = { x, y };
+  // Navegação só pelas bolinhas dos cantos: bloqueamos o arrasto nativo
+  // da lib interceptando, na fase de captura, os toques/cliques reais
+  // (isTrusted) antes de chegarem a ela. Os eventos sintéticos que o
+  // `flipTo` dispara (isTrusted = false) continuam passando normalmente.
+  useEffect(() => {
+    const el = bookWrapRef.current;
+    if (!el) return;
+    const block = (e: Event) => {
+      if (e.isTrusted) e.stopPropagation();
+    };
+    el.addEventListener("mousedown", block, true);
+    el.addEventListener("touchstart", block, true);
+    return () => {
+      el.removeEventListener("mousedown", block, true);
+      el.removeEventListener("touchstart", block, true);
+    };
   }, []);
-
-  const handleDragEnd = useCallback(
-    (x: number, y: number, target: EventTarget | null) => {
-      const start = dragStart.current;
-      dragStart.current = null;
-      if (!start) return;
-      const dx = x - start.x;
-      const dy = y - start.y;
-
-      // Toque/clique simples: metade direita avança, esquerda volta —
-      // exceto sobre elementos interativos (botões, links, formulário).
-      if (Math.abs(dx) < TAP_THRESHOLD && Math.abs(dy) < TAP_THRESHOLD) {
-        if (target instanceof Element && target.closest("a, button, input, textarea, select, label, [role='button']")) return;
-        const box = bookWrapRef.current?.getBoundingClientRect();
-        if (!box) return;
-        const go = x > box.left + box.width / 2 ? next : prev;
-        // Adia para depois de a lib processar o próprio mouseup/touchend
-        // deste toque — senão a virada sintética começa com ela ainda
-        // achando que o dedo está pressionado, e é descartada.
-        setTimeout(go, 0);
-        return;
-      }
-
-      // Gesto predominantemente vertical (ou curto demais) = scroll dentro
-      // da página, não virada.
-      if (Math.abs(dx) < DRAG_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
-      if (dx < 0) next();
-      else prev();
-    },
-    [next, prev]
-  );
 
   // Navegação por teclado
   useEffect(() => {
@@ -252,24 +242,6 @@ export default function BookReader({ pages }: BookReaderProps) {
         <div
           ref={bookWrapRef}
           className="absolute inset-0"
-          onMouseDown={(e) => {
-            if (Date.now() - lastTouchAt.current < 800) return;
-            handleDragStart(e.clientX, e.clientY);
-          }}
-          onMouseUp={(e) => {
-            if (Date.now() - lastTouchAt.current < 800) return;
-            handleDragEnd(e.clientX, e.clientY, e.target);
-          }}
-          onTouchStart={(e) => {
-            lastTouchAt.current = Date.now();
-            const t = e.touches[0];
-            if (t) handleDragStart(t.clientX, t.clientY);
-          }}
-          onTouchEnd={(e) => {
-            lastTouchAt.current = Date.now();
-            const t = e.changedTouches[0];
-            if (t) handleDragEnd(t.clientX, t.clientY, e.target);
-          }}
         >
           <FlipBook
             ref={bookRef}
@@ -288,7 +260,7 @@ export default function BookReader({ pages }: BookReaderProps) {
             mobileScrollSupport
             clickEventForward
             useMouseEvents
-            showPageCorners
+            showPageCorners={false}
             disableFlipByClick
             onFlip={handleFlip}
             onInit={fitToFrame}
@@ -306,13 +278,36 @@ export default function BookReader({ pages }: BookReaderProps) {
         {/* Dica de navegação — some após a primeira virada de página */}
         <div
           aria-hidden={hasFlipped}
-          className={`pointer-events-none absolute bottom-14 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full bg-gray-950/40 backdrop-blur-md border border-white/25 shadow-md text-white text-xs tracking-wide transition-opacity duration-700 ${
-            hasFlipped ? "opacity-0" : "opacity-100 animate-pulse-gentle"
+          className={`pointer-events-none absolute bottom-[4.5rem] right-3 z-20 flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full bg-gray-950/40 backdrop-blur-md border border-white/25 shadow-md text-white text-xs tracking-wide transition-opacity duration-700 ${
+            hasFlipped ? "opacity-0" : "opacity-100"
           }`}
         >
           <Hand className="w-4 h-4" />
-          Toque ou arraste para passar a página
+          Toque na bolinha para passar a página
         </div>
+
+        {/* Bolinha de voltar — canto inferior esquerdo (a partir da 2ª página) */}
+        {current > 0 && (
+          <button
+            onClick={prev}
+            aria-label="Página anterior"
+            className="absolute bottom-3 left-3 z-20 w-11 h-11 flex items-center justify-center rounded-full active:scale-90 transition-transform"
+          >
+            <span className="w-4 h-4 rounded-full bg-white/70 border border-white shadow-md shadow-black/30" />
+          </button>
+        )}
+
+        {/* Bolinha de avançar — canto inferior direito, ponto de foco */}
+        {current < pages.length - 1 && (
+          <button
+            onClick={next}
+            aria-label="Próxima página"
+            className="absolute bottom-3 right-3 z-20 w-11 h-11 flex items-center justify-center rounded-full active:scale-90 transition-transform"
+          >
+            <span className="absolute w-6 h-6 rounded-full bg-rose-300/70 animate-ping" />
+            <span className="relative w-6 h-6 rounded-full bg-white border-2 border-rose-300 shadow-lg shadow-black/30" />
+          </button>
+        )}
 
         {/* Botão de sumário */}
         <button
