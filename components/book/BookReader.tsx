@@ -227,7 +227,7 @@ export default function BookReader({ pages }: BookReaderProps) {
             minHeight={520}
             maxHeight={920}
             maxShadowOpacity={0.5}
-            flippingTime={650}
+            flippingTime={1000}
             usePortrait
             showCover={false}
             mobileScrollSupport
