@@ -62,9 +62,9 @@ export default function CoverPage({
           </Reveal>
 
           <Reveal delay={100}>
-            <h1 className="font-serif text-5xl sm:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-2xl">
+            <h1 className="font-names text-6xl font-normal text-white leading-tight mb-4 drop-shadow-2xl">
               {bride}
-              <span className="text-gradient block text-2xl sm:text-3xl font-light italic my-2">
+              <span className="font-serif text-gradient block text-2xl font-light italic my-2">
                 &amp;
               </span>
               {groom}
@@ -81,13 +81,13 @@ export default function CoverPage({
             <div className="flex flex-col items-center justify-center gap-3 text-white/90 mb-6">
               <div className="flex items-center gap-2 max-w-full px-2">
                 <Calendar className="w-4 h-4 shrink-0 text-rose-300" />
-                <span className="text-sm sm:text-base font-medium">
+                <span className="text-sm font-medium">
                   {formattedDate} • {weddingTime}
                 </span>
               </div>
               <div className="flex items-center gap-2 max-w-full px-2">
                 <MapPin className="w-4 h-4 shrink-0 text-rose-300" />
-                <span className="text-sm sm:text-base font-medium text-center">
+                <span className="text-sm font-medium text-center">
                   {weddingLocation}
                 </span>
               </div>

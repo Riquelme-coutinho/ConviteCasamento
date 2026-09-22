@@ -47,19 +47,19 @@ export default function RSVP() {
   return (
     <section
       id="confirmar"
-      className="scroll-mt-16 py-20 sm:py-32 bg-gray-950 bg-gradient-to-br from-gray-950 via-rose-950/20 to-gray-950 relative overflow-hidden"
+      className="scroll-mt-16 py-20 bg-gray-950 bg-gradient-to-br from-gray-950 via-rose-950/20 to-gray-950 relative overflow-hidden"
     >
       {/* Elementos decorativos de fundo */}
       <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-rose-500/5 blur-3xl" aria-hidden="true" />
       <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-amber-500/5 blur-3xl" aria-hidden="true" />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
+      <div className="relative z-10 max-w-2xl mx-auto px-4">
         {/* Cabeçalho */}
         <Reveal className="text-center mb-12">
           <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
             ✦ Aguardamos você
           </span>
-          <h2 className="mt-3 font-serif text-4xl sm:text-5xl font-bold text-white">
+          <h2 className="mt-3 font-serif text-4xl font-bold text-white">
             Confirme Presença
           </h2>
           <div className="mt-4 flex items-center justify-center gap-3">
@@ -90,7 +90,7 @@ export default function RSVP() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 space-y-5"
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 space-y-5"
           >
             {/* Campo: Nome */}
             <div>

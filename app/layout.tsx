@@ -5,37 +5,40 @@
  * Define as fontes globais, metadata de SEO e a estrutura HTML base.
  */
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Dancing_Script } from "next/font/google";
+import { Cormorant_Garamond, Montserrat, Pinyon_Script } from "next/font/google";
 import { CartProvider } from "@/context/CartContext";
 import MusicPlayer from "@/components/MusicPlayer";
 import "./globals.css";
 
 /**
- * Fonte Serif: Playfair Display
- * Usada para títulos e nomes — transmite elegância e tradição.
+ * Fonte Serif: Cormorant Garamond
+ * Usada para títulos — serifada clássica e delicada, combina com a caligrafia.
  */
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
 
 /**
- * Fonte Sans-Serif: Inter
- * Usada para corpo de texto — moderna, legível e limpa.
+ * Fonte Sans-Serif: Montserrat
+ * Usada para corpo de texto — leve, elegante e legível.
  */
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
 /**
- * Fonte Script: Dancing Script
- * Usada em detalhes "manuscritos" — envelope de abertura, selo, acentos.
+ * Fonte Script: Pinyon Script
+ * Caligrafia clássica (copperplate) — nomes do casal e detalhes "manuscritos".
  */
-const dancingScript = Dancing_Script({
+const pinyonScript = Pinyon_Script({
   subsets: ["latin"],
+  weight: "400",
   variable: "--font-script",
   display: "swap",
 });
@@ -63,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${playfair.variable} ${inter.variable} ${dancingScript.variable}`} data-scroll-behavior="smooth">
+    <html lang="pt-BR" className={`${cormorant.variable} ${montserrat.variable} ${pinyonScript.variable}`} data-scroll-behavior="smooth">
       <body className="font-sans antialiased bg-white text-gray-900">
         {/* CartProvider torna o estado do carrinho acessível em toda a aplicação */}
         <CartProvider>{children}</CartProvider>

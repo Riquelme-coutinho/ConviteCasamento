@@ -67,15 +67,15 @@ export default function Story({ events }: StoryProps) {
   return (
     <section
       id="historia"
-      className="scroll-mt-10 py-10 sm:py-32 bg-gradient-to-b from-white via-rose-50/30 to-white"
+      className="scroll-mt-10 py-10 bg-gradient-to-b from-white via-rose-50/30 to-white"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto px-4">
         {/* Cabeçalho da seção */}
-        <div className="text-center mb-16 sm:mb-24">
+        <div className="text-center mb-16">
           <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
             ❤ Nossa Jornada ❤
           </span>
-          <h2 className="mt-3 font-serif text-4xl sm:text-5xl font-bold text-gray-800">
+          <h2 className="mt-3 font-serif text-4xl font-bold text-gray-800">
             Nossa História
           </h2>
           <div className="mt-4 flex items-center justify-center gap-3">
@@ -92,29 +92,18 @@ export default function Story({ events }: StoryProps) {
 
         {/* Timeline */}
         <div className="relative">
-          {/* Linha vertical central — visível apenas em md+ */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-rose-200 to-transparent -translate-x-1/2" />
-
-          <div className="space-y-12 sm:space-y-0">
+          <div className="space-y-12">
             {events.map((event, index) => {
               const IconComponent = IconMap[event.icon] ?? Heart;
               const colors = colorClasses[event.color] ?? colorClasses.rose;
-              // Em desktop: índices pares ficam à esquerda, ímpares à direita
+              // Alterna o lado de onde cada card entra na animação
               const isLeft = index % 2 === 0;
 
               return (
                 <Reveal key={event.id} from={isLeft ? "left" : "right"}>
-                <div
-                  className={`relative flex md:items-center ${
-                    isLeft ? "md:flex-row" : "md:flex-row-reverse"
-                  } flex-col gap-6 md:gap-0 mb-10 sm:mb-20`}
-                >
+                <div className="relative flex flex-col gap-6 mb-10">
                   {/* Card de conteúdo */}
-                  <div
-                    className={`w-full md:w-[calc(50%-3rem)] ${
-                      isLeft ? "md:pr-12" : "md:pl-12"
-                    } ${isLeft ? "md:text-right" : "md:text-left"}`}
-                  >
+                  <div className="w-full">
                     <div
                       className={`group ${colors.bg} border ${colors.border} rounded-3xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
                     >
@@ -135,22 +124,8 @@ export default function Story({ events }: StoryProps) {
                     </div>
                   </div>
 
-                  {/* Ícone central da timeline */}
-                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center">
-                    <div
-                      className={`w-12 h-12 ${colors.iconBg} border-4 border-white rounded-full flex items-center justify-center shadow-lg`}
-                    >
-                      <IconComponent
-                        className={`w-5 h-5 ${colors.text}`}
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Ícone mobile (exibido ao lado do card) */}
-                  <div
-                    className={`md:hidden flex items-center gap-3 ${colors.text}`}
-                  >
+                  {/* Ícone exibido ao lado do card */}
+                  <div className={`flex items-center gap-3 ${colors.text}`}>
                     <div
                       className={`w-10 h-10 ${colors.iconBg} rounded-full flex items-center justify-center shadow-sm flex-shrink-0`}
                     >
@@ -169,13 +144,13 @@ export default function Story({ events }: StoryProps) {
 
         {/* Citação de fechamento */}
         <Reveal delay={200}>
-          <div className="mt-16 sm:mt-24 max-w-2xl mx-auto text-center">
+          <div className="mt-16 max-w-2xl mx-auto text-center">
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="h-px w-12 bg-rose-200" />
               <Heart className="w-4 h-4 text-rose-300 fill-rose-300" aria-hidden="true" />
               <div className="h-px w-12 bg-rose-200" />
             </div>
-            <p className="font-serif italic text-xl sm:text-2xl text-gray-700 leading-relaxed">
+            <p className="font-serif italic text-xl text-gray-700 leading-relaxed">
               &ldquo;Dois jovens que se encontraram por acaso, uma vida inteira
               construída lado a lado e um amor que escolhemos continuar
               vivendo todos os dias. E, se lá em 2016 alguém dissesse que

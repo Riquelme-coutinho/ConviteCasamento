@@ -53,7 +53,7 @@ export default function ClosingPage({ bride, groom, formattedDate }: ClosingPage
         <div className="relative mt-16">
           <div className="flex items-center justify-center gap-2 mb-3">
             <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-            <p className="font-serif text-xl text-white">
+            <p className="font-names text-3xl text-white">
               {bride} &amp; {groom}
             </p>
             <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />

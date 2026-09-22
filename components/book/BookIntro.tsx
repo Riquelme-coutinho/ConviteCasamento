@@ -50,7 +50,7 @@ export default function BookIntro({ bride, groom, onOpen }: BookIntroProps) {
           <div className="absolute inset-0 rounded-md bg-white shadow-xl shadow-rose-900/10 border border-rose-100 overflow-hidden">
             {/* "carta" que espia por dentro, sugerindo o conteúdo */}
             <div className="absolute inset-x-3 bottom-3 top-10 rounded-sm bg-gradient-to-b from-rose-50 to-white border border-rose-100/70 flex items-start justify-center pt-3">
-              <span className="font-serif text-xs sm:text-sm text-gray-400 tracking-widest uppercase">
+              <span className="font-names text-xl sm:text-2xl text-gray-500">
                 {bride} &amp; {groom}
               </span>
             </div>

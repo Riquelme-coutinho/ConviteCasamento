@@ -26,7 +26,7 @@ export default function LocalPage({
   return (
     <PageShell>
       <section id="local" className="min-h-full py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto px-4">
           <Reveal className="text-center mb-10">
             <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
               ✦ Como chegar

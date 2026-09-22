@@ -34,7 +34,7 @@ export default function MenuPage({ bride, groom, whatsapp, mapsLink, onNavigate 
           <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
             ✦ Toque nos ícones ✦
           </span>
-          <h2 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-gray-800">
+          <h2 className="mt-3 font-serif text-3xl font-bold text-gray-800">
             Para interagir
           </h2>
           <p className="mt-3 text-gray-500 text-sm max-w-xs mx-auto">

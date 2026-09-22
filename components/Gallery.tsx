@@ -72,16 +72,16 @@ export default function Gallery() {
   return (
     <section
       id="galeria"
-      className="scroll-mt-16 py-20 sm:py-32 bg-gray-950"
+      className="scroll-mt-16 py-20 bg-gray-950"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Cabeçalho da seção */}
         <Reveal>
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-12">
             <span className="text-rose-400 text-sm font-medium uppercase tracking-[0.3em]">
               ✦ Memórias
             </span>
-            <h2 className="mt-3 font-serif text-4xl sm:text-5xl font-bold text-white">
+            <h2 className="mt-3 font-serif text-4xl font-bold text-white">
               Nossa Galeria
             </h2>
             <div className="mt-4 flex items-center justify-center gap-3">
@@ -97,7 +97,7 @@ export default function Gallery() {
         </Reveal>
 
         {/* Grid — fotos em formato retrato, já que o ensaio é vertical */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {photos.map((photo, index) => (
             <Reveal key={photo.id} delay={index * 100}>
               <div

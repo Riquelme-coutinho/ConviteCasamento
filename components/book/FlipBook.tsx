@@ -32,6 +32,9 @@ export interface PageFlipController {
   getCurrentPageIndex: () => number;
   getBoundsRect: () => PageRectLike;
   getPageCollection: () => PageCollectionLike;
+  /** Objeto de configuração vivo — a lib relê width/height a cada `update()` */
+  getSettings: () => { width: number; height: number };
+  update: () => void;
 }
 
 export interface FlipBookHandle {
@@ -65,6 +68,7 @@ interface FlipBookOwnProps {
   showPageCorners?: boolean;
   disableFlipByClick?: boolean;
   onFlip?: (e: FlipEvent) => void;
+  onInit?: () => void;
 }
 
 const FlipBook = RawHTMLFlipBook as unknown as ForwardRefExoticComponent<

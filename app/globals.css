@@ -33,6 +33,7 @@
   --font-serif: var(--font-serif);
   --font-sans:  var(--font-sans);
   --font-script: var(--font-script);
+  --font-names: var(--font-script), cursive;
 
   /* ── Família "rose" → tons de azul #b0cddf ───────────────── */
   --color-rose-50:  #EEF5FA;

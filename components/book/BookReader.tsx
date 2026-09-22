@@ -138,6 +138,29 @@ export default function BookReader({ pages }: BookReaderProps) {
 
   const handleFlip = useCallback((e: FlipEvent) => setCurrent(e.data), []);
 
+  // Em modo "stretch" a lib encaixa a página mantendo a proporção fixa
+  // width/height — com qualquer proporção fixa sobra uma faixa escura nas
+  // laterais (ou em cima/embaixo) em telas com outro formato, e cada celular
+  // tem o seu. Por isso a proporção passa a ser a da própria moldura,
+  // recalculada sempre que ela muda (rotação, barra do navegador etc.).
+  const fitToFrame = useCallback(() => {
+    const pf = bookRef.current?.pageFlip();
+    const el = bookWrapRef.current;
+    if (!pf || !el || !el.clientWidth || !el.clientHeight) return;
+    const settings = pf.getSettings();
+    settings.width = el.clientWidth;
+    settings.height = el.clientHeight;
+    pf.update();
+  }, []);
+
+  useEffect(() => {
+    const el = bookWrapRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(fitToFrame);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [fitToFrame]);
+
   // A lib só confirma sua própria detecção de arrasto quando o gesto
   // percorre quase toda a largura do livro (ver `overshoot` em `flipTo`) —
   // inviável para um arrasto real de dedo/mouse. Por isso detectamos o
@@ -223,9 +246,9 @@ export default function BookReader({ pages }: BookReaderProps) {
             height={860}
             size="stretch"
             minWidth={280}
-            maxWidth={520}
-            minHeight={520}
-            maxHeight={920}
+            maxWidth={2000}
+            minHeight={320}
+            maxHeight={2000}
             maxShadowOpacity={0.5}
             flippingTime={1000}
             usePortrait
@@ -236,6 +259,7 @@ export default function BookReader({ pages }: BookReaderProps) {
             showPageCorners
             disableFlipByClick
             onFlip={handleFlip}
+            onInit={fitToFrame}
           >
             {flipPages}
           </FlipBook>
