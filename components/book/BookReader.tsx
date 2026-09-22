@@ -7,14 +7,14 @@
  * física nativa da lib só confirma um arrasto que percorre quase toda a
  * largura da página, o que é inviável num gesto real de dedo/mouse.
  *
- * Navegação: arrastar em qualquer ponto da página (touch/mouse), setas
- * (desktop), teclado (← →) e um menu de sumário para pular direto para
- * qualquer página.
+ * Navegação: arrastar em qualquer ponto da página (touch/mouse), tocar na
+ * metade direita/esquerda para avançar/voltar, teclado (← →) e um menu de
+ * sumário para pular direto para qualquer página.
  */
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, forwardRef, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import { Hand, Menu, X } from "lucide-react";
 import FlipBook, { type FlipBookHandle, type FlipEvent } from "./FlipBook";
 
 export interface BookPage {
@@ -136,7 +136,15 @@ export default function BookReader({ pages }: BookReaderProps) {
     if (pf) flipTo(pf.getCurrentPageIndex() - 1);
   }, [flipTo]);
 
-  const handleFlip = useCallback((e: FlipEvent) => setCurrent(e.data), []);
+  // Dica "toque ou arraste" — some depois da primeira virada de página
+  const [hasFlipped, setHasFlipped] = useState(false);
+
+  const handleFlip = useCallback((e: FlipEvent) => {
+    setCurrent(e.data);
+    // A lib também emite "flip" (com a página 0) ao inicializar/redimensionar
+    // — só conta como virada real quando sai da primeira página.
+    if (e.data > 0) setHasFlipped(true);
+  }, []);
 
   // Em modo "stretch" a lib encaixa a página mantendo a proporção fixa
   // width/height — com qualquer proporção fixa sobra uma faixa escura nas
@@ -173,19 +181,38 @@ export default function BookReader({ pages }: BookReaderProps) {
   // da lib já trata isso (interrompe a animação em andamento e começa a
   // nova, ver `finishAnimation` em `Flip.flip`).
   const DRAG_THRESHOLD = 48;
+  const TAP_THRESHOLD = 10;
   const dragStart = useRef<{ x: number; y: number } | null>(null);
+  // Após um toque, o navegador emula mousedown/mouseup no mesmo ponto —
+  // ignoramos esses eventos para um toque não virar duas páginas.
+  const lastTouchAt = useRef(0);
 
   const handleDragStart = useCallback((x: number, y: number) => {
     dragStart.current = { x, y };
   }, []);
 
   const handleDragEnd = useCallback(
-    (x: number, y: number) => {
+    (x: number, y: number, target: EventTarget | null) => {
       const start = dragStart.current;
       dragStart.current = null;
       if (!start) return;
       const dx = x - start.x;
       const dy = y - start.y;
+
+      // Toque/clique simples: metade direita avança, esquerda volta —
+      // exceto sobre elementos interativos (botões, links, formulário).
+      if (Math.abs(dx) < TAP_THRESHOLD && Math.abs(dy) < TAP_THRESHOLD) {
+        if (target instanceof Element && target.closest("a, button, input, textarea, select, label, [role='button']")) return;
+        const box = bookWrapRef.current?.getBoundingClientRect();
+        if (!box) return;
+        const go = x > box.left + box.width / 2 ? next : prev;
+        // Adia para depois de a lib processar o próprio mouseup/touchend
+        // deste toque — senão a virada sintética começa com ela ainda
+        // achando que o dedo está pressionado, e é descartada.
+        setTimeout(go, 0);
+        return;
+      }
+
       // Gesto predominantemente vertical (ou curto demais) = scroll dentro
       // da página, não virada.
       if (Math.abs(dx) < DRAG_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
@@ -206,9 +233,6 @@ export default function BookReader({ pages }: BookReaderProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
-  const isFirst = current === 0;
-  const isLast = current === pages.length - 1;
-
   // A lib recria toda a sua coleção interna de páginas sempre que a
   // referência de `children` muda (efeito que ela mesma registra sobre
   // `props.children`) — o que destruiria/recriaria o livro (perdendo a
@@ -228,15 +252,23 @@ export default function BookReader({ pages }: BookReaderProps) {
         <div
           ref={bookWrapRef}
           className="absolute inset-0"
-          onMouseDown={(e) => handleDragStart(e.clientX, e.clientY)}
-          onMouseUp={(e) => handleDragEnd(e.clientX, e.clientY)}
+          onMouseDown={(e) => {
+            if (Date.now() - lastTouchAt.current < 800) return;
+            handleDragStart(e.clientX, e.clientY);
+          }}
+          onMouseUp={(e) => {
+            if (Date.now() - lastTouchAt.current < 800) return;
+            handleDragEnd(e.clientX, e.clientY, e.target);
+          }}
           onTouchStart={(e) => {
+            lastTouchAt.current = Date.now();
             const t = e.touches[0];
             if (t) handleDragStart(t.clientX, t.clientY);
           }}
           onTouchEnd={(e) => {
+            lastTouchAt.current = Date.now();
             const t = e.changedTouches[0];
-            if (t) handleDragEnd(t.clientX, t.clientY);
+            if (t) handleDragEnd(t.clientX, t.clientY, e.target);
           }}
         >
           <FlipBook
@@ -265,30 +297,22 @@ export default function BookReader({ pages }: BookReaderProps) {
           </FlipBook>
         </div>
 
-        {/* Setas de navegação */}
         {/*
-         * Controles flutuantes: fundo escuro translúcido fixo (não o
-         * bg-white/10 usado antes), para garantir contraste do ícone
-         * branco tanto sobre páginas claras (ex: Menu, Local) quanto
-         * escuras (ex: Galeria, RSVP) — o convidado sempre enxerga a
-         * navegação, não só quando a página por baixo é escura.
+         * Controles flutuantes: fundo escuro translúcido fixo, para garantir
+         * contraste do texto branco tanto sobre páginas claras (ex: Menu,
+         * Local) quanto escuras (ex: Galeria, RSVP).
          */}
-        <button
-          onClick={prev}
-          disabled={isFirst}
-          aria-label="Página anterior"
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-gray-950/40 backdrop-blur-md border border-white/25 shadow-md text-white flex items-center justify-center transition-all hover:bg-gray-950/55 active:scale-90 disabled:opacity-0 disabled:pointer-events-none"
+
+        {/* Dica de navegação — some após a primeira virada de página */}
+        <div
+          aria-hidden={hasFlipped}
+          className={`pointer-events-none absolute bottom-14 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full bg-gray-950/40 backdrop-blur-md border border-white/25 shadow-md text-white text-xs tracking-wide transition-opacity duration-700 ${
+            hasFlipped ? "opacity-0" : "opacity-100 animate-pulse-gentle"
+          }`}
         >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={next}
-          disabled={isLast}
-          aria-label="Próxima página"
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-gray-950/40 backdrop-blur-md border border-white/25 shadow-md text-white flex items-center justify-center transition-all hover:bg-gray-950/55 active:scale-90 disabled:opacity-0 disabled:pointer-events-none"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+          <Hand className="w-4 h-4" />
+          Toque ou arraste para passar a página
+        </div>
 
         {/* Botão de sumário */}
         <button
